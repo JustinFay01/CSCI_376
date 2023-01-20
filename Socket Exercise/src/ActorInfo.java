@@ -24,7 +24,7 @@ public class ActorInfo {
 
    protected DataInputStream reply = null;
    protected PrintStream send = null;   
-   protected SSLSocket sock = null;   
+   protected SSLSocket sock = null;  
 
    //***********************************************************
    //*** The constructors create the socket and set up the input
@@ -215,7 +215,7 @@ public class ActorInfo {
          System.out.println("----------------------------------------------");
          System.out.println(actorInfo);
 
-         //info.serveUpActor(actorInfo);
+         info.serveUpActor(actorInfo);
          
       } catch (Exception ee) {
     	 ee.printStackTrace(); 
