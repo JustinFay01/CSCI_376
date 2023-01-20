@@ -39,14 +39,14 @@ public class MP1 {
         Socket remotesock;
         
         public void run() {            
-            try {
+           // try {
 
                 // Put the code to receive and process the 
                 // Web request from IFTTT HERE!
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //} catch (IOException e) {
+            //    e.printStackTrace();
+           // }
         }
 
     }
@@ -54,7 +54,7 @@ public class MP1 {
     // Constructor.
     // Here we start the receiver, then create an SSL socket and 
     // set up the I/O variables.
-    public MP1 () {
+    public MP1 () throws UnknownHostException, IOException {
         final int DEFAULT_PORT = 443;
         final int TIMEOUT = 5 * 1000; // 5 seconds
 
@@ -64,8 +64,15 @@ public class MP1 {
 
         // Now access the webhook at IFTTT and set up the 
         // stream variables
-
-        // HERE!
+        SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+        sock = (SSLSocket) factory.createSocket("maker.ifttt.com", DEFAULT_PORT);
+        if(sock != null){
+            reply = new DataInputStream(sock.getInputStream());
+            send = new PrintStream(sock.getOutputStream());
+            sock.setSoTimeout(TIMEOUT);
+        }
+        sock.startHandshake();
+        
     }
 
     // This method checks all the interfaces the executing computer has and
@@ -108,9 +115,24 @@ public class MP1 {
         String address = getMyIPAddress();
 
         // Send the Webhook data
-
+        cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO HTTP/1.1";
+        send.println(cmd);
+        cmd = "Host: maker.ifttt.com";
+        send.println(cmd);
+        cmd = "Connection: keep-alive";
+        send.println(cmd);
+        send.println("");
         // Read and report the response
-
+        String HTMLline ="";
+        try{
+            HTMLline = reply.readLine();
+            System.out.println(HTMLline);
+        }  catch (java.net.SocketTimeoutException e) {
+            e.printStackTrace();
+    
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
     }
 
     // Close the socket
@@ -125,9 +147,14 @@ public class MP1 {
     // The main method...easy.  
     public static void main( String[] args )
     {
-        MP1 mp1 = new MP1();
-
-        mp1.sendHook();
-        mp1.close();
+        try{
+            MP1 mp1 = new MP1();
+            mp1.sendHook();
+            mp1.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+        
     }
 }
