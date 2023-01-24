@@ -15,6 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.Buffer;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -42,17 +43,14 @@ public class MP1 {
             try {
                 // Put the code to receive and process the
                 // Web request from IFTTT HERE!
-                this.input = reply;
-                this.output = send;
-            
-                    System.out.println("running...");
-                    netsock = new ServerSocket(DEFAULT_PORT);
-                    remotesock = netsock.accept();
-                    System.out.println("\nGot a connection from " +
-                                    remotesock.getInetAddress().getHostName());
-                     netsock.close();
-                
-               
+
+                System.out.println("running...");
+                netsock = new ServerSocket(DEFAULT_PORT);
+                remotesock = netsock.accept();
+                System.out.println("\nGot a connection from " +
+                        remotesock.getInetAddress().getHostName());
+                netsock.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -124,7 +122,9 @@ public class MP1 {
         String address = getMyIPAddress();
 
         // Send the Webhook data
-        cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO HTTP/1.1";
+        cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
+        // cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=192.168.1.34
+        // HTTP/1.1";
         send.println(cmd);
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
@@ -133,10 +133,15 @@ public class MP1 {
         send.println("");
 
         // Read and report the response
-        String HTMLline = "";
         try {
-            HTMLline = reply.readLine();
-            System.out.println(HTMLline);
+
+            StringBuffer inputLine = new StringBuffer();
+            String tmp;
+            while ((tmp = reply.readLine()) != null) {
+                inputLine.append(tmp);
+                System.out.println(tmp);
+            }
+            reply.close();
         } catch (java.net.SocketTimeoutException e) {
             e.printStackTrace();
 
