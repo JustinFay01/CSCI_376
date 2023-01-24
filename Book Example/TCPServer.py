@@ -6,10 +6,12 @@ serverSocket.bind(('', serverPort))
 serverSocket.listen(1)
 
 print('the server is ready to receive')
-
+msg = "Connection Secured"
 while True:
     connectionSocket, addr = serverSocket.accept()
-    sentence = connectionSocket.recv(1024).decode()
-    capitalizedSentence = sentence.upper()
-    connectionSocket.send(capitalizedSentence.encode())
+    #sentence = connectionSocket.recv(1024).decode()
+    #capitalizedSentence = sentence.upper()
+    #connectionSocket.send(capitalizedSentence.encode())
+
+    connectionSocket.send(msg.encode())
     connectionSocket.close
