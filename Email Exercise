@@ -1,0 +1,12 @@
+Encode Email and App password in base64
+type open s_client -connect smtp.gmail.com:465 -crlf
+Initate through ehlo hope.edu
+type auth login
+    it will ask for your username and password in base64
+Enter email in base64
+Enter app password in base6
+type mail to: <email>
+type rcpt to: <email>
+type data
+    enter message and when done type . on its own line
+thats it! 

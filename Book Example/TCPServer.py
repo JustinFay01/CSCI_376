@@ -1,6 +1,6 @@
 from socket import *
 
-serverPort = 12000
+serverPort = 80
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(1)
@@ -13,5 +13,7 @@ while True:
     #capitalizedSentence = sentence.upper()
     #connectionSocket.send(capitalizedSentence.encode())
 
-    connectionSocket.send(msg.encode())
+    print("Connected to", addr)
+
+    #connectionSocket.send(msg.encode())
     connectionSocket.close

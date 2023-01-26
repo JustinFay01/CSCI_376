@@ -43,10 +43,15 @@ public class MP1 {
             try {
                 // Put the code to receive and process the
                 // Web request from IFTTT HERE!
+                
 
                 System.out.println("running...");
-                netsock = new ServerSocket(DEFAULT_PORT);
+                netsock = new ServerSocket(DEFAULT_PORT, 443);
                 remotesock = netsock.accept();
+
+                input = new DataInputStream(remotesock.getInputStream());
+                output = new PrintStream(remotesock.getOutputStream());
+
                 System.out.println("\nGot a connection from " +
                         remotesock.getInetAddress().getHostName());
                 netsock.close();
@@ -123,18 +128,29 @@ public class MP1 {
 
         // Send the Webhook data
         cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
-        // cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=192.168.1.34
-        // HTTP/1.1";
         send.println(cmd);
+
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
+
         cmd = "Connection: keep-alive";
         send.println(cmd);
+
+        //Content Type
+        //Value
+        //Length
+        //Content Length
+        //Json structure
+
+        //Body Content Length
+        //Json Version
+
+        //{ \"value1"}
+
         send.println("");
 
         // Read and report the response
         try {
-
             StringBuffer inputLine = new StringBuffer();
             String tmp;
             while ((tmp = reply.readLine()) != null) {
