@@ -43,10 +43,10 @@ public class MP1 {
             try {
                 // Put the code to receive and process the
                 // Web request from IFTTT HERE!
-                
+                String command = "";
 
                 System.out.println("running...");
-                netsock = new ServerSocket(DEFAULT_PORT, 443);
+                netsock = new ServerSocket(DEFAULT_PORT);
                 remotesock = netsock.accept();
 
                 input = new DataInputStream(remotesock.getInputStream());
@@ -55,6 +55,9 @@ public class MP1 {
                 System.out.println("\nGot a connection from " +
                         remotesock.getInetAddress().getHostName());
                 netsock.close();
+
+                command = input.readLine();
+                System.out.println("   Got a command: "+command);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,7 +71,7 @@ public class MP1 {
     // set up the I/O variables.
     public MP1() throws UnknownHostException, IOException {
         final int DEFAULT_PORT = 443;
-        final int TIMEOUT = 5 * 1000; // 5 seconds
+        final int TIMEOUT = 10 * 1000; // 5 seconds
 
         // Spawn a listener thread
         Thread thread = new Thread(new Receiver());
@@ -91,7 +94,7 @@ public class MP1 {
     // enumerates these, giving a choice to the user as to which one to use.
     // It returns a string with that IP address.
     public String getMyIPAddress() {
-        InetAddress[] addresses = new InetAddress[10];
+        InetAddress[] addresses = new InetAddress[17];
         Enumeration e = null;
         try {
             e = NetworkInterface.getNetworkInterfaces();
@@ -130,6 +133,7 @@ public class MP1 {
         cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
         send.println(cmd);
 
+        // GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=192.168.1.34 HTTP/1.1
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
 
