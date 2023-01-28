@@ -52,9 +52,12 @@ public class MP1 {
                 input = new DataInputStream(remotesock.getInputStream());
                 output = new PrintStream(remotesock.getOutputStream());
 
+                //Got from Yahoo Phone Server
                 System.out.println("\nGot a connection from " +
                         remotesock.getInetAddress().getHostName());
                 netsock.close();
+
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -127,19 +130,35 @@ public class MP1 {
         String address = getMyIPAddress();
 
         // Send the Webhook data
-        cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
+        //cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
+        
+
+        // cmd = "Host: maker.ifttt.com";
+        // send.println(cmd);
+
+        // cmd = "Connection: keep-alive";
+        // send.println(cmd);
+
+
+        ///////////////////////Post rather///////////////////////
+        cmd = "POST /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO HTTP/1.1";
         send.println(cmd);
 
+        //Host
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
 
-        cmd = "Connection: keep-alive";
+         //Content Type
+        cmd = "Content-Type: text/plain";
+        send.println(cmd);
+        
+        //Content length
+        int len = address.length();
+        cmd = "Content-Length: " + len;
         send.println(cmd);
 
-        //Content Type
         //Value
-        //Length
-        //Content Length
+        send.println("{ \"value1\" : " + address + " }");
         //Json structure
 
         //Body Content Length
