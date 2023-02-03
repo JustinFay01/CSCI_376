@@ -152,7 +152,7 @@ public class MP1Solution {
     private void sendGET(String address) {
         String cmd;
         
-        cmd = "GET /trigger/mp1/with/key/cNrj3wtR2o-OugeF9750Q4?value1="+ address + " HTTP/1.1";
+        cmd = "GET /trigger/mp1/with/key/KEYHERE?value1="+ address + " HTTP/1.1";
         send.println(cmd);
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
