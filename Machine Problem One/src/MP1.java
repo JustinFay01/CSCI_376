@@ -52,7 +52,7 @@ public class MP1 {
                 input = new DataInputStream(remotesock.getInputStream());
                 output = new PrintStream(remotesock.getOutputStream());
 
-                //Got from Yahoo Phone Server
+                // Got from Yahoo Phone Server
                 System.out.println("\nGot a connection from " +
                         remotesock.getInetAddress().getHostName());
                 netsock.close();
@@ -128,40 +128,38 @@ public class MP1 {
         String address = getMyIPAddress();
 
         // Send the Webhook data
-        //cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
-        
-
-        // cmd = "Host: maker.ifttt.com";
-        // send.println(cmd);
-
-        // cmd = "Connection: keep-alive";
-        // send.println(cmd);
-
-
-        ///////////////////////Post rather///////////////////////
-        cmd = "POST /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO HTTP/1.1";
-        send.println(cmd);
+        cmd = "GET /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO?value1=" + address + " HTTP/1.1";
 
         cmd = "Host: maker.ifttt.com";
         send.println(cmd);
 
-         //Content Type
-        cmd = "Content-Type: text/plain";
-        send.println(cmd);
-        
-        //Content length
-        int len = address.length();
-        cmd = "Content-Length: " + len;
+        cmd = "Connection: keep-alive";
         send.println(cmd);
 
-        //Value
-        send.println("{ \"value1\" : " + address + " }");
-        //Json structure
+        /////////////////////// Post rather///////////////////////
+        // cmd = "POST /trigger/mp1/with/key/czMmaZy40u35Uim0pfJYYO HTTP/1.1";
+        // send.println(cmd);
 
-        //Body Content Length
-        //Json Version
+        // cmd = "Host: maker.ifttt.com";
+        // send.println(cmd);
 
-        //{ \"value1"}
+        // // Content Type
+        // cmd = "Content-Type: text/plain";
+        // send.println(cmd);
+
+        // // Content length
+        // int len = address.length();
+        // cmd = "Content-Length: " + len;
+        // send.println(cmd);
+        // send.println("");
+        // // Value
+        // send.println("{ \"value1\" : " + address + " }");
+        // Json structure
+
+        // Body Content Length
+        // Json Version
+
+        // { \"value1"}
 
         send.println("");
 
