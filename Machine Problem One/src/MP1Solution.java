@@ -1,0 +1,254 @@
+//----------------------------------------------------------------------
+//
+//  CSCI 376 MP1 
+//
+//  Send data to an IFTTT webhook, which sends it back to us.
+//  This solution uses BOTH GET and POST methods.
+//
+//  Mike Jipping, February 2023
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.Scanner;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
+public class MP1Solution {
+
+    DataInputStream reply = null;
+    PrintStream send = null;   
+    SSLSocket sock = null;  
+    
+    // The Receiver class implements a thread that waits to
+    // receive an http request from IFTTT.
+    // NOTE: it does this twice because we use both GET and POST in 
+    // this code.
+    private class Receiver implements Runnable {
+
+        static final int DEFAULT_PORT = 80;
+
+        protected DataInputStream input = null;
+        protected PrintStream output = null;
+        protected ServerSocket netsock = null;
+        Socket remotesock;
+        
+        public void run() {   
+            System.out.println("*** Server listening on port "+DEFAULT_PORT+" ***");         
+            try {
+                netsock = new ServerSocket(DEFAULT_PORT, 25);
+
+                // First: GET!
+                remotesock = netsock.accept();
+
+                input = new DataInputStream(remotesock.getInputStream());
+                output = new PrintStream(remotesock.getOutputStream());
+                System.out.println("\nGot a connection from "+ 
+                              remotesock.getInetAddress().getHostName());
+                String command = input.readLine();
+                System.out.println("   Got a command: "+command);
+                output.println("<HTML></HTML>");
+
+                remotesock.close();
+
+                // Now POST!
+                remotesock = netsock.accept();
+
+                input = new DataInputStream(remotesock.getInputStream());
+                output = new PrintStream(remotesock.getOutputStream());
+                System.out.println("\nGot a connection from "+ 
+                              remotesock.getInetAddress().getHostName());
+                command = input.readLine();
+                System.out.println("   Got a command: "+command);
+                output.println("<HTML></HTML>");
+
+                remotesock.close();
+                netsock.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
+    // Constructor.
+    // Here we start the receiver, then create an SSL socket and 
+    // set up the I/O variables.
+    public MP1Solution () {
+        final int DEFAULT_PORT = 443;
+        final int TIMEOUT = 5 * 1000; // 5 seconds
+
+        // Spawn a listener thread
+        Thread thread = new Thread(new Receiver());
+        thread.start();
+
+        // Now access the webhook at IFTTT
+        SSLSocketFactory factory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+        try {
+            sock = (SSLSocket) factory.createSocket("maker.ifttt.com", DEFAULT_PORT);
+            sock.startHandshake();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            sock = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            sock = null;
+        }
+
+        // Set up the communication variables.
+        if (sock != null) {
+            try {
+                reply = new DataInputStream(sock.getInputStream());
+                send = new PrintStream(sock.getOutputStream());
+                sock.setSoTimeout(TIMEOUT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // This method checks all the interfaces the executing computer has and
+    // enumerates these, giving a choice to the user as to which one to use.
+    // It returns a string with that IP address.
+    public String getMyIPAddress() {
+        InetAddress[] addresses = new InetAddress[10];
+        Enumeration e = null;
+        try {
+            e = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e1) {
+            e1.printStackTrace();
+            return null;
+        }
+
+        System.out.println("**** Choose an IP address and give its number ***");
+        int count=0;
+        while(e.hasMoreElements()) {
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements()) {
+                InetAddress i = (InetAddress) ee.nextElement();
+                addresses[count] = i;
+                count++;
+                System.out.println("("+count+") "+i.getHostAddress());
+            }
+        }
+        System.out.print("Choice? ");
+        Scanner s = new Scanner(System.in);
+        int choice = s.nextInt();
+
+        return addresses[choice-1].getHostAddress();
+    }
+
+    // This method uses the HTTP GET command to send the request.  
+    // Data is in the URL request and there is no body.
+    private void sendGET(String address) {
+        String cmd;
+        
+        cmd = "GET /trigger/mp1/with/key/KEYHERE?value1="+ address + " HTTP/1.1";
+        send.println(cmd);
+        cmd = "Host: maker.ifttt.com";
+        send.println(cmd);
+        send.println("");
+    }
+
+    // This method uses the HTTP POST command.  Data is in the body
+    // of the request.  NOTE: For POST requests, you need to have
+    // Content-Length and Content-Type in the header.
+    private void sendPOST(String address) {
+        String cmd;
+
+        cmd = "POST /trigger/mp1/with/key/KEYHERE HTTP/1.1";//Replace with your key
+        send.println(cmd);
+        cmd = "Host: maker.ifttt.com";
+        send.println(cmd);
+        cmd = "Content-Type: application/json";
+        send.println(cmd);
+        String payload = "{ \"value1\":\"" + address + "\" }";
+        int len = cmd.length();
+        cmd = "Content-Length: "+len;
+        send.println(cmd);
+        send.println("");
+        send.println(payload);
+    }
+
+    // Code to get and print the repsonse from IFTTT.  We get the header 
+    // until there a blank line.  Then we get "Content-Length" characters 
+    // for the body.  Used for both GET and POST.
+    private void getResponse(DataInputStream reply) {
+        String resp;
+        int contentLength = 0;
+
+        try {
+            // Get the header.  Record the Content-Length
+            do { 
+                resp = reply.readLine();
+                if (resp.contains("Content-Length:")) {
+                    String[] pieces = resp.split(" "); 
+                    contentLength = Integer.parseInt(pieces[1]);
+                }
+                System.out.println(resp);
+            } while (resp.length() != 0);
+
+            // Get the body.
+            for (int c=0; c<contentLength; c++) {
+                byte b = reply.readByte();
+                System.out.print((char)b);
+            }
+            System.out.println();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // The sendHook method uses both GET and POST methods.
+    public void sendHook() {
+        int contentLength = 0;
+        String resp;
+        String address = getMyIPAddress();
+        
+        // GET...
+        System.out.println("\nSending GET request...");
+        sendGET(address);
+        System.out.println("--- Response ---");
+        getResponse(reply);
+
+        // Wait for it...
+        System.out.print("Press ENTER when ready...");
+        Scanner s = new Scanner(System.in);
+        s.next();
+        s.close();
+
+        // POST...
+        System.out.println("\nSending POST request...");
+        sendPOST(address);
+        System.out.println("--- Response ---");
+        getResponse(reply);
+    }
+
+    // Close the socket
+    public void close() {
+        try {
+            sock.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+        
+    // The main method...easy.  
+    public static void main( String[] args )
+    {
+        MP1Solution mp1 = new MP1Solution();
+
+        mp1.sendHook();
+        mp1.close();
+    }
+}
