@@ -21,8 +21,8 @@ public class TransportLayer {
     }
 
     public byte[] getPayload() {
-        byte[] payload = new byte[length-24];
-        for (int b=0; b<length-24; b++) payload[b] = packet[b+24];
+        byte[] payload = new byte[length-20];
+        for (int b=0; b<length-20; b++) payload[b] = packet[b+20];
         return payload;
     }
 
