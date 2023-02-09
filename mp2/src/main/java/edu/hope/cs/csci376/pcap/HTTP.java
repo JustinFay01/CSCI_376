@@ -17,8 +17,13 @@ public class HTTP {
 
     }
 
+<<<<<<< HEAD
     // Time O(n + m) n length of packet (including payload) and m length of payload
     // Space O(m)
+=======
+    //Time O(n + m) n length of packet (including payload) and m length of payload\
+    //Space O(m)
+>>>>>>> babfbce589cdb96df42eecd0d6b1d2585a204e2b
     public void print() {
         System.out.println("--- HTTP ---");
         boolean gzip = false;
