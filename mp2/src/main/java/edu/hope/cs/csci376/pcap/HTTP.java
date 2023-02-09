@@ -2,7 +2,6 @@ package edu.hope.cs.csci376.pcap;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 public class HTTP {
@@ -17,8 +16,8 @@ public class HTTP {
 
     }
 
-    // Time O(n^2 + m) n length of packet (including payload) and m length of
-    // payload\
+    // Time O(n^2 + m) n length of packet (including payload)
+    // and m length of payload
     // Space O(m)
     public void print() {
         System.out.println("--- HTTP ---");
@@ -35,39 +34,50 @@ public class HTTP {
                 }
                 line = ""; // reset the line
             } else {
-                line += String.valueOf((char) packet[i]); // Continue adding Characters to line until new line
+                line += (char) packet[i]; // Continue adding Characters to line until new line
                 String encode = "Content-Encoding: gzip";
-                if (line.length() >= encode.length()) {
+                if (line.length() >= encode.length()) {//prevent string matching every loop
                     if (line.contains(encode))// Check for encoding O(n) time
                         gzip = true;
                 }
-
             }
         }
 
-        if (gzip) {
+        if (gzip) {// Decompression Required
             byte[] toDecode = new byte[packet.length - encodeIndex];
-            System.out.println();
             for (int j = 0; encodeIndex < packet.length; encodeIndex++, j++)
-                toDecode[j] = packet[encodeIndex]; // copy elements of payload into decode
+                toDecode[j] = packet[encodeIndex]; // copy elements of payload into toDecode
 
-            // Decompression
-            GZIPInputStream gis;
-            byte[] decompressed;
             try {
-                gis = new GZIPInputStream(new ByteArrayInputStream(toDecode));
-                decompressed = gis.readAllBytes();
-
-                for (int i = 0; i < decompressed.length; i++) {
-                    if ((char) decompressed[i] == '\n') // If we have a new line character
-                        System.out.print("\\n\n"); // print the actual newline character then the new line
-                    else
-                        System.out.print((char) decompressed[i]);// else just print the character
-                }
+                byte[] decompressed = decompress(toDecode);
+                printPayload(decompressed);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
+    }
+    // Decompression
+    // Time Unknown
+    // Space Unknown
+    public byte[] decompress(byte[] toDecode) throws IOException {
+        GZIPInputStream gis;
+        byte[] decompressed;
+
+        gis = new GZIPInputStream(new ByteArrayInputStream(toDecode));
+        decompressed = gis.readAllBytes();
+        return decompressed;
+    }
+
+    //Time O(n)
+    //Space O(1)
+    public void printPayload(byte[] decompressed) {
+        for (int i = 0; i < decompressed.length; i++) {
+            if ((char) decompressed[i] == '\n') // If we have a new line character
+                System.out.print("\\n\n"); // print the actual newline character then the new line
+            else
+                System.out.print((char) decompressed[i]);// else just print the character
+        }
+
     }
 }
