@@ -17,10 +17,9 @@ public class HTTP {
 
     }
 
-
-
-    //Time O(n^2 + m) n length of packet (including payload) and m length of payload\
-    //Space O(m)
+    // Time O(n^2 + m) n length of packet (including payload) and m length of
+    // payload\
+    // Space O(m)
     public void print() {
         System.out.println("--- HTTP ---");
         boolean gzip = false;
@@ -37,8 +36,12 @@ public class HTTP {
                 line = ""; // reset the line
             } else {
                 line += String.valueOf((char) packet[i]); // Continue adding Characters to line until new line
-                if (line.contains("Content-Encoding: gzip"))// Check for encoding
-                    gzip = true;
+                String encode = "Content-Encoding: gzip";
+                if (line.length() >= encode.length()) {
+                    if (line.contains(encode))// Check for encoding O(n) time
+                        gzip = true;
+                }
+
             }
         }
 
