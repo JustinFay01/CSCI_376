@@ -17,7 +17,9 @@ public class HTTP {
 
     }
 
-    //Time O(n + m) n length of packet (including payload) and m length of payload\
+
+
+    //Time O(n^2 + m) n length of packet (including payload) and m length of payload\
     //Space O(m)
     public void print() {
         System.out.println("--- HTTP ---");
