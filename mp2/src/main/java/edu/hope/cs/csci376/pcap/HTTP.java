@@ -36,7 +36,7 @@ public class HTTP {
             } else {
                 line += (char) packet[i]; // Continue adding Characters to line until new line
                 String encode = "Content-Encoding: gzip";
-                if (line.length() >= encode.length()) {//prevent string matching every loop
+                if (!gzip && line.length() >= encode.length()) {//prevent string matching every loop
                     if (line.contains(encode))// Check for encoding O(n) time
                         gzip = true;
                 }
