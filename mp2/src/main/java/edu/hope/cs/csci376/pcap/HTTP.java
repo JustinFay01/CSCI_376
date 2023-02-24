@@ -9,6 +9,9 @@ public class HTTP {
     int length = 0;
     byte[] packet;
 
+    final byte CARRIAGE_RETURN = 0x0d;
+    final byte LINE_FEED = 0x0a;
+
     public HTTP(byte[] packet) {
 
         this.packet = packet;
@@ -26,9 +29,9 @@ public class HTTP {
         int encodeIndex = 0;
 
         for (int i = 0; i < packet.length; i++) {
-            if ((char) packet[i] == '\r') {// Catch the end of a line
+            if ((char) packet[i] == CARRIAGE_RETURN) {// Catch the end of a line
                 System.out.print(line + "\\r\\n"); // Print out the line of string
-                if (gzip && line.length() == 1) {// We have reached the compressed payload
+                if (line.length() == 1) {// We have reached the compressed payload
                     encodeIndex = i + 2;// skip passed \r and \n
                     break;
                 }
@@ -42,12 +45,11 @@ public class HTTP {
                 }
             }
         }
+        byte[] toDecode = new byte[packet.length - encodeIndex];
+        for (int j = 0; encodeIndex < packet.length; encodeIndex++, j++)
+            toDecode[j] = packet[encodeIndex]; // copy elements of payload into toDecode
 
         if (gzip) {// Decompression Required
-            byte[] toDecode = new byte[packet.length - encodeIndex];
-            for (int j = 0; encodeIndex < packet.length; encodeIndex++, j++)
-                toDecode[j] = packet[encodeIndex]; // copy elements of payload into toDecode
-
             try {
                 byte[] decompressed = decompress(toDecode);
                 printPayload(decompressed);
@@ -55,7 +57,7 @@ public class HTTP {
                 e.printStackTrace();
             }
 
-        }
+        } else printPayload(toDecode);
     }
     // Decompression
     // Time Unknown
@@ -73,7 +75,7 @@ public class HTTP {
     //Space O(1)
     public void printPayload(byte[] decompressed) {
         for (int i = 0; i < decompressed.length; i++) {
-            if ((char) decompressed[i] == '\n') // If we have a new line character
+            if ((char) decompressed[i] == LINE_FEED) // If we have a new line character
                 System.out.print("\\n\n"); // print the actual newline character then the new line
             else
                 System.out.print((char) decompressed[i]);// else just print the character
