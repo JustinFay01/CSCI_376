@@ -16,6 +16,9 @@ public class TCPPacket extends TransportLayer {
                 "\n   Header Length: " + getHeaderLength() + " bytes" +
                 "\n   Flags: ???");
         printFlags();
+        System.out.println("   Window Size: " + getWindowSize() +
+                "\n   Checksum: " + getCheckSum() + 
+                "\n   Urgent Pointer: " + getUrgentPointer());
 
     }
 
@@ -78,7 +81,17 @@ public class TCPPacket extends TransportLayer {
                         : "FIN: set");
     }
 
+    public int getWindowSize(){
+        return (packet[14]&0xFF) * 256 + (packet[15]&0xff);
+    }
 
-    
+    public String getCheckSum(){
+        return "0x" + Integer.toHexString((packet[16]&0xFF) * 256 + (packet[17]&0xff));
+    }
+
+    public int getUrgentPointer(){
+        return (packet[18]&0xFF) * 256 + (packet[19]&0xff);
+    }
+
 
 }
