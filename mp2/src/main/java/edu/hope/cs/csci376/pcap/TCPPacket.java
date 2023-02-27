@@ -10,6 +10,7 @@ public class TCPPacket extends TransportLayer {
     }
 
     public void print() {
+        System.out.println("--- Transport Layer: TCP Packet ---");
         super.print(); // Gives Source & Destination port
         System.out.println("   Sequence number: " + getSequenceNumber() +
                 "\n   Acknowledgement number: " + getAcknowledgemntNubmber() +

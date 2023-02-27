@@ -10,7 +10,8 @@ public class UDPPacket extends TransportLayer{
     }
 
     public void print() {
-        super.print();
+        System.out.println("--- Transport Layer: UDP Packet ---");
+        super.print(); // Gives Source & Destination port
         System.out.println("   Length: " + getLength() + 
                            "\n   Checksum: " + getCheckSum());
 

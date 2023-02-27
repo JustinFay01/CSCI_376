@@ -27,7 +27,6 @@ public class TransportLayer {
     }
 
     public void print() {
-        System.out.println("--- Transport Layer ---");
         System.out.println("   Source port: "+ sourcePort) ;
         System.out.println("   Destination port: "+ destinationPort);
     }
