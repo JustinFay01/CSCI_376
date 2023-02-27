@@ -14,7 +14,7 @@ public class TCPPacket extends TransportLayer {
         System.out.println("   Sequence number: " + getSequenceNumber() +
                 "\n   Acknowledgement number: " + getAcknowledgemntNubmber() +
                 "\n   Header Length: " + getHeaderLength() + " bytes" +
-                "\n Flags: ???");
+                "\n   Flags: ???");
         printFlags();
 
     }
@@ -77,5 +77,8 @@ public class TCPPacket extends TransportLayer {
                         ? "FIN: Not set"
                         : "FIN: set");
     }
+
+
+    
 
 }
