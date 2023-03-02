@@ -49,7 +49,7 @@ public class TCPPacket extends TransportLayer {
     // Acknowledgement number 4 bytes is a java integer and will print negative
     // sometimes
     public long getAcknowledgemntNubmber() {
-        long ack = (packet[8] & 0xFF) * 256 * 256 * 256 + (packet[9] & 0xFF) * 256 * 256 + (packet[10]) * 256
+        long ack = (packet[8] & 0xFF) * 256 * 256 * 256 + (packet[9] & 0xFF) * 256 * 256 + (packet[10] & 0xFF) * 256
                 + (packet[11] & 0xFF);
         return ack = ack < 0 ? ack += Math.pow(2, 32) : ack;
     }
@@ -101,6 +101,7 @@ public class TCPPacket extends TransportLayer {
     // Retreive 16 bit check sum in hex format
     public String getCheckSum() {
         return "0x" + Integer.toHexString((packet[16] & 0xFF) * 256 + (packet[17] & 0xFF));
+        //return String.format("0x%02X",(short) ((packet[16]&0xFF) * 256 + (packet[17] & 0xFF)));
     }
 
     // Retreive 16 bit urgent pointer
