@@ -28,18 +28,19 @@ public class AppTest
         String[] myResults = loadArr(resultFile);
 
         //Pacekt 174
-        assertEquals(myResults[0].replaceAll("\\s+",""), ans[0].replaceAll("\\s+",""));
+        assertEquals(ans[0].replaceAll("\\s+",""), myResults[0].replaceAll("\\s+",""));
         //Pacekt 19
-        assertTrue(myResults[0].equals(ans[0]));
+        assertEquals(ans[1], myResults[1]);
         //Pacekt 64
-        assertTrue(myResults[0].equals(ans[0]));
-
+        assertEquals(ans[2], myResults[2]);
+        System.out.println(myResults[0]);
+        System.out.println(myResults[1]);
+        System.out.println(myResults[2]);
     }
 
     public String[] loadArr(File f){
-        String packet174ans = "";
-        String packet19ans = "";
-        String packet64ans = "";
+        String packet174ans, packet19ans, packet64ans;
+        packet174ans = packet19ans = packet64ans = "";
 
         String[] ans = {packet174ans, packet19ans, packet64ans};
         try{

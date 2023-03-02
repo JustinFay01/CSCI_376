@@ -7,7 +7,7 @@
    Destination port: 59297
    Sequence number: 1929792627
    Acknowledgement number: 1556372842
-   Header Length: 20 bytes
+   Header length: 20 bytes
    Flags: 0x18
       0... .... Congestion Window Reduced: Not set
       .0.. .... ECN-Echo: Not set
@@ -17,9 +17,9 @@
       .... .0.. Reset: Not set
       .... ..0. SYN: Not set
       .... ...0 FIN: Not set
-   Window Size: 501
+   Window size: 501
    Checksum: 0xafe6
-   Urgent Pointer: 0
+   Urgent pointer: 0
 --- HTTP ---
 HTTP/1.1 200 OK\r\n
 Date: Thu, 16 Feb 2023 16:00:44 GMT\r\n
@@ -52,7 +52,7 @@ STOP
    Destination port: 3389
    Sequence number: 2511534047
    Acknowledgement number: 0
-   Header Length: 20 bytes
+   Header length: 20 bytes
    Flags: 0x02
       0... .... Congestion Window Reduced: Not set
       .0.. .... ECN-Echo: Not set
@@ -62,9 +62,9 @@ STOP
       .... .0.. Reset: Not set
       .... ..1. SYN: Set
       .... ...0 FIN: Not set
-   Window Size: 1024
+   Window size: 1024
    Checksum: 0x6d4d
-   Urgent Pointer: 0
+   Urgent pointer: 0
 STOP
 --- Ethernet ---
    Type = 0x0800

@@ -14,12 +14,12 @@ public class TCPPacket extends TransportLayer {
         super.print(); // Gives Source & Destination port
         System.out.println("   Sequence number: " + getSequenceNumber() +
                 "\n   Acknowledgement number: " + getAcknowledgemntNubmber() +
-                "\n   Header Length: " + getHeaderLength() + " bytes" +
+                "\n   Header length: " + getHeaderLength() + " bytes" +
                 "\n   Flags: " + String.format("0x%02X",(short) packet[13]));
         printFlags();
-        System.out.println("   Window Size: " + getWindowSize() +
+        System.out.println("   Window size: " + getWindowSize() +
                 "\n   Checksum: " + getCheckSum() +
-                "\n   Urgent Pointer: " + getUrgentPointer());
+                "\n   Urgent pointer: " + getUrgentPointer());
 
     }
 
