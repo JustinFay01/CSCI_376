@@ -1,0 +1,77 @@
+--- Ethernet ---
+   Type = 0x0800
+--- Network Layer ---
+   Protocol = 0x06
+--- Transport Layer: TCP Packet ---
+   Source port: 80
+   Destination port: 59297
+   Sequence number: 1929792627
+   Acknowledgement number: 1556372842
+   Header Length: 20 bytes
+   Flags: 0x18
+      0... .... Congestion Window Reduced: Not set
+      .0.. .... ECN-Echo: Not set
+      ..0. .... Urgent: Not set
+      ...1 .... Acknowledgement: Set
+      .... 1... Push: Set
+      .... .0.. Reset: Not set
+      .... ..0. SYN: Not set
+      .... ...0 FIN: Not set
+   Window Size: 501
+   Checksum: 0xafe6
+   Urgent Pointer: 0
+--- HTTP ---
+HTTP/1.1 200 OK\r\n
+Date: Thu, 16 Feb 2023 16:00:44 GMT\r\n
+Server: Apache/2.4.38 (Raspbian)\r\n
+Last-Modified: Tue, 09 Aug 2022 14:27:49 GMT\r\n
+ETag: "9f-5e5cfbca1caa8-gzip"\r\n
+Accept-Ranges: bytes\r\n
+Vary: Accept-Encoding\r\n
+Content-Encoding: gzip\r\n
+Content-Length: 133\r\n
+Keep-Alive: timeout=5, max=100\r\n
+Connection: Keep-Alive\r\n
+Content-Type: text/html\r\n
+\r\n
+<html>\n
+  <head>\n
+    <title>Welcome to Example.com!</title>\n
+  </head>\n
+  <body>\n
+    <h1>Success! The example.com virtual host is working!</h1>\n
+  </body>\n
+</html>\n
+STOP
+--- Ethernet ---
+   Type = 0x0800
+--- Network Layer ---
+   Protocol = 0x06
+--- Transport Layer: TCP Packet ---
+   Source port: 58925
+   Destination port: 3389
+   Sequence number: 2511534047
+   Acknowledgement number: 0
+   Header Length: 20 bytes
+   Flags: 0x02
+      0... .... Congestion Window Reduced: Not set
+      .0.. .... ECN-Echo: Not set
+      ..0. .... Urgent: Not set
+      ...0 .... Acknowledgement: Not set
+      .... 0... Push: Not set
+      .... .0.. Reset: Not set
+      .... ..1. SYN: Set
+      .... ...0 FIN: Not set
+   Window Size: 1024
+   Checksum: 0x6d4d
+   Urgent Pointer: 0
+STOP
+--- Ethernet ---
+   Type = 0x0800
+--- Network Layer ---
+   Protocol = 0x11
+--- Transport Layer: UDP Packet ---
+   Source port: 443
+   Destination port: 50060
+   Length: 128
+   Checksum: 60722

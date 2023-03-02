@@ -17,12 +17,12 @@ public class UDPPacket extends TransportLayer{
 
     }
     //UDP Packet length 5th and 6th hex number
-    public int getLength(){
+    public long getLength(){
         return (packet[4] & 0xFF) * 256 + (packet[5] & 0xFF); 
     }
 
     //UDP Packet length 7th and 8th hex number
-    public int getCheckSum(){
+    public long getCheckSum(){
         return (packet[6] & 0xFF) * 256 + (packet[7] & 0xFF); 
     }
     
