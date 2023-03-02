@@ -1,18 +1,32 @@
 package edu.hope.cs.csci376.pcap;
 
-public class UDPPacket extends TransportLayer{
+public class UDPPacket {
 
-    public byte[] packet;
+    int length = 0;
+    byte[] packet;
+
+    int sourcePort = 0;
+    int destinationPort = 0;
 
     public UDPPacket(byte[] packet) {
-        super(packet);
         this.packet = packet;
+        length = packet.length;
+
+        sourcePort = (packet[0]&0xFF)*256 + (packet[1]&0xFF);
+        destinationPort = (packet[2]&0xFF)*256 + (packet[3]&0xFF);
+    }
+
+    public byte[] getPayload() {
+        byte[] payload = new byte[length-20];
+        for (int b=0; b<length-20; b++) payload[b] = packet[b+20];
+        return payload;
     }
 
     // Final print method of all Header information
     public void print() {
         System.out.println("--- Transport Layer: UDP Packet ---");
-        super.print(); // Gives Source & Destination port
+        System.out.println("   Source port: "+ sourcePort) ;
+        System.out.println("   Destination port: "+ destinationPort); // Gives Source & Destination port
         System.out.println("   Length: " + getLength() + 
                            "\n   Checksum: " + getCheckSum());
 
