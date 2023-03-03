@@ -33,11 +33,14 @@ public class App
             if (link.type == DataLinkLayer.TYPE_IPv4) {
                 NetworkLayer network = new NetworkLayer(link.getPayload());
                 network.print();
-                if (network.protocol == NetworkLayer.IPV4_PROTOCOL_TCP) {
-                    TransportLayer transport = new TransportLayer(network.getPayload());
-                    transport.print();
-                    if (transport.sourcePort == 80 || transport.destinationPort == 80) {
-                        HTTP http = new HTTP(transport.getPayload());
+                if (network.protocol == NetworkLayer.IPV4_PROTOCOL_UDP) {
+                    UDPPacket udp = new UDPPacket(network.getPayload());
+                    udp.print();
+                } else if (network.protocol == NetworkLayer.IPV4_PROTOCOL_TCP) {
+                    TCPPacket tcp = new TCPPacket(network.getPayload());
+                    tcp.print();
+                    if (tcp.sourcePort == 80 || tcp.destinationPort == 80) {
+                        HTTP http = new HTTP(tcp.getPayload());
                         http.print();
                     }
                 }

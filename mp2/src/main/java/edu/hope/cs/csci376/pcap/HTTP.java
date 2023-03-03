@@ -45,6 +45,7 @@ public class HTTP {
                 }
             }
         }
+        System.out.println();
         byte[] toDecode = new byte[packet.length - encodeIndex];
         for (int j = 0; encodeIndex < packet.length; encodeIndex++, j++)
             toDecode[j] = packet[encodeIndex]; // copy elements of payload into toDecode
