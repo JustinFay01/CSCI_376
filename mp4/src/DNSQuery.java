@@ -5,7 +5,7 @@
 // We build the query / DNS packet byte by byte, by writing bytes to
 // a ByteArrayOutputStream object, then get the bytes from that.
 
-package main.java.edu.hope.cs.csci376;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

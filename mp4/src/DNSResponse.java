@@ -9,7 +9,6 @@
 // NOTE: We need the socket used to send the DNS query so we receive
 // the response correctly.
 
-package main.java.edu.hope.cs.csci376;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
