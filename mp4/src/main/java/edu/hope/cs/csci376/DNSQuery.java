@@ -55,7 +55,8 @@ public class DNSQuery {
             dataOutputStream.writeShort(0xABCD); 
 
             // flags = 0x0100 (RD=1, recursion desired)
-            short requestFlags = Short.parseShort("0000000100000000", 2); 
+            // short requestFlags = Short.parseShort("0000000100000000", 2); 
+            short requestFlags = Short.parseShort("0000000000000000", 2); 
             ByteBuffer flagsByteBuffer = ByteBuffer.allocate(2).putShort(requestFlags);
             byte[] flagsByteArray = flagsByteBuffer.array();
             dataOutputStream.write(flagsByteArray);

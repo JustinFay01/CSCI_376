@@ -31,5 +31,9 @@ public class App {
         DNSResponse response = new DNSResponse(dgs);
         response.receive();
         response.printResponse();
+     
+        //FOUND (Third part of TDL), served by
+        //FOUND (Second part), served by
+        //Found (First part), address is 
     }
 }
