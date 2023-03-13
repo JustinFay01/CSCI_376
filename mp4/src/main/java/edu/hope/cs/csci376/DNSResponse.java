@@ -48,7 +48,6 @@ public class DNSResponse {
     ////////////////////////////////////////  CODE  ///////////////////////////////////////////////////
     // Print the DNSname from the byte array in that wacky format
     public static int processDNSName(byte bytes[], int start) {
-
         int pos = start;
         while (bytes[pos] != 0) {
             // if (pos != start)
@@ -58,7 +57,7 @@ public class DNSResponse {
             // first 2 bits, masks the rest.
             if (pos2 != 0) {
                 pos2 = ((length & 0x3f) << 8) + (bytes[pos + 1] & 0xff);
-                   processDNSName(bytes, pos2);
+                processDNSName(bytes, pos2);
                 pos++;
                 break;
             } else {
@@ -73,8 +72,7 @@ public class DNSResponse {
     }
 
     // Returns the DNSName
-    public static String getDNSName(byte bytes[], int start, String dnsName) {
-
+    public String getDNSName(byte bytes[], int start, String dnsName) {
         int pos = start;
         while (bytes[pos] != 0) {
             if (pos != start)
@@ -123,19 +121,18 @@ public class DNSResponse {
     }
 
     public String getResponse() {
-
         int questionCount = (response[4] << 8) + response[5];
         int answerCount = (response[6] << 8) + response[7];
         int position = 12;
         int qtype = 0;
 
-        while (questionCount > 0) {
+        //while (questionCount > 0) {
             position = processDNSName(response, position);
             qtype = (response[position] << 8) + response[position + 1];
             position += 2;
             questionCount--;
             position += 2;
-        }
+        //}
 
         if(qtype == 0x0001) {
             return getDNSServer(response, position);
@@ -147,8 +144,10 @@ public class DNSResponse {
             return getDNSServer(response, position);
         }
         else{
+            System.out.println();
             return getDNSServer(response, position);
         }
+       
     }
 
     //////////////////////////////////////// JIPPING ///////////////////////////////////////////////////
