@@ -20,6 +20,7 @@ public class DNSResponse {
 
     DatagramSocket dgSocket = null;
     byte[] response = null;
+    boolean responseFlag; // Set to catch if the final result is a CNAME
 
     // Constructor records the socket used.
     public DNSResponse(DatagramSocket dgSocket) {
@@ -47,7 +48,7 @@ public class DNSResponse {
     ////////////////////////////////////////    MY   ///////////////////////////////////////////////////
     ////////////////////////////////////////  CODE  ///////////////////////////////////////////////////
     // Print the DNSname from the byte array in that wacky format
-    public static int processDNSName(byte bytes[], int start) {
+    public int processDNSName(byte bytes[], int start) {
         int pos = start;
         while (bytes[pos] != 0) {
             // if (pos != start)
@@ -102,52 +103,35 @@ public class DNSResponse {
     public String getDNSServer(byte response[], int start){
         int position = start;
         position = processDNSName(response, position);
-        int qtype = (response[position] << 8) + response[position + 1];
+        int qtype = (response[position] << 8) + response[position + 1];//get Qtype
         position += 10;
-
-        String dnsServerName = "";
+        String dnsServerName = ""; //Need empty string for recursive function inside dnsNAME
         switch(qtype){
-            case 1: 
+            case 1: // if its an A record, return true and send IP
+                responseFlag = true;
                 dnsServerName += "" + (response[position] < 0 ? 256 + response[position++] : response[position++]) + ".";
                 dnsServerName += "" + (response[position] < 0 ? 256 + response[position++] : response[position++]) + ".";
                 dnsServerName += "" + (response[position] < 0 ? 256 + response[position++] : response[position++]) + ".";
                 dnsServerName += "" + (response[position] < 0 ? 256 + response[position++] : response[position++]);
                 break;
-            default:
+            default: // Otherwise its most likely a CNAME so send that instea
                 dnsServerName = getDNSName(response, position, dnsServerName);
                 break;
         }
+        
         return dnsServerName;
     }
 
+    public boolean getResponseFlag(){
+        return responseFlag;
+    }
+
     public String getResponse() {
-        int questionCount = (response[4] << 8) + response[5];
-        int answerCount = (response[6] << 8) + response[7];
         int position = 12;
-        int qtype = 0;
-
-        //while (questionCount > 0) {
-            position = processDNSName(response, position);
-            qtype = (response[position] << 8) + response[position + 1];
-            position += 2;
-            questionCount--;
-            position += 2;
-        //}
-
-        if(qtype == 0x0001) {
-            return getDNSServer(response, position);
-        }
-        else if (qtype == 0x5 && answerCount == 1){
-                System.out.print("   Alias for: ");
-                position = printDNSName(response, position);
-                System.out.println();
-            return getDNSServer(response, position);
-        }
-        else{
-            System.out.println();
-            return getDNSServer(response, position);
-        }
-       
+        position = processDNSName(response, position);
+        position += 2;
+        position += 2;
+        return getDNSServer(response, position);
     }
 
     //////////////////////////////////////// JIPPING ///////////////////////////////////////////////////

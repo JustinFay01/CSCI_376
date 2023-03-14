@@ -45,11 +45,17 @@ public class App {
             if (!name.equals(parsedName.toString())) { // Check if we've reached the full domain name
                 System.out.println("Querying: " + serName + "\n" +
                         "\"" + parsedName.toString() + "\" domain found: " + response.getResponse());
-                serName = response.getResponse(); //Set new domain name to query next iteration        
+                serName = response.getResponse(); //Set new domain name to query next iteration     
             } else { // We've Reached our destination
+                String result = ": ";
+                String finalDomain = response.getResponse();
+                if(!response.getResponseFlag()){
+                    result += "Alias for ";
+                } 
                 System.out.println("Querying: " + serName + "\n" +
-                        "Reached ---> " + parsedName.toString() + ": " + response.getResponse() + "\n" +
-                        "Done!");
+                    "Reached ---> " + parsedName.toString() + result + finalDomain + "\n" +
+                    "Done!");
+    
             }
         }
     }
