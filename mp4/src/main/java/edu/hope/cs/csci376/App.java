@@ -48,7 +48,7 @@ public class App {
                 serName = response.getResponse(); //Set new domain name to query next iteration     
             } else { // We've Reached our destination
                 String result = ": ";
-                String finalDomain = response.getResponse();
+                String finalDomain = response.getResponse(); //Need to get the response first so we can set the response flag
                 if(!response.getResponseFlag()){
                     result += "Alias for ";
                 } 
