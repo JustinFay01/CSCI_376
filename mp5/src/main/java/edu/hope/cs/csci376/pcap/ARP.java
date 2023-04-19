@@ -19,18 +19,20 @@ public class ARP {
 
     public ARP(byte[] packet) {
         this.packet = packet;
-
+        
         hardwareType = (packet[0] & 0xFF) * 256 + (packet[1] & 0xFF);
         setProtocolType(packet);
         hardwareSize = (packet[4] & 0xFF);
         protocolSize = (packet[5] & 0xFF);
         operation = (packet[6] & 0xFF) * 256 + (packet[7] & 0xFF);
 
-        senderMACAddress = stringConvert(8, 13); 
-        //senderIPAddress = stringConvert(14, 17);
-        targetMACAddress = stringConvert(18, 23);
-        //targetIPAddress = stringConvert(22, 25);
-        
+        //All start and end indices are determined by the ARP packet format
+        //in the .pcap files, which can be viewed in wire shark.
+        senderMACAddress = macConvert(8, 13);
+        senderIPAddress = ipConvert(14, 17);
+        targetMACAddress = macConvert(18, 23);
+        targetIPAddress = ipConvert(24, 27);
+
     }
 
     public void print() {
@@ -44,6 +46,10 @@ public class ARP {
                 + "   Sender IP  address: " + senderIPAddress + "\n"
                 + "   Target MAC address: " + targetMACAddress + "\n"
                 + "   Target IP address: " + targetIPAddress + "\n");
+
+        for (int i = 14; i <= 17; i++) {
+            System.out.print(Byte.toUnsignedInt(packet[i]) + " ");
+        }
     }
 
     /*
@@ -62,14 +68,35 @@ public class ARP {
         protocolType = String.format("0x%s", tmp); // Needs to be changed to hex string
     }
 
-    public String stringConvert(int start, int end){
+    /*
+     * Serves as a helper function to take n length section of the byte array
+     * and to convert it into the correct format hex value as and in turn the correct
+     * format mac address.
+     */
+    public String macConvert(int start, int end) {
         String val = "";
-        for(int i = start; i <= end; i++){
-            String tmp = Integer.toHexString(packet[i] & 0xFF); //Convert byte to hex string
-            if(tmp.length() == 1) tmp = "0" + tmp;              //if the hex value is only one digit pad with 0
+        for (int i = start; i <= end; i++) {
+            String tmp = Integer.toHexString(packet[i] & 0xFF); // Convert byte to hex string
+            if (tmp.length() == 1)
+                tmp = "0" + tmp; // if the hex value is only one digit pad with 0
             val += tmp;
-            if (i != end)     //if last value of loop dont add :
+            if (i != end) // if last value of loop dont add :
                 val += ":";
+        }
+        return val;
+    }
+
+    /*
+     * Serves as a helper function to take n length section of the byte array
+     * and to convert it into an unsigned integer and in turn the correct
+     * format ip address.
+     */
+    public String ipConvert(int start, int end) {
+        String val = "";
+        for (int i = start; i <= end; i++) {
+            val += Byte.toUnsignedInt(packet[i]); 
+            if (i != end)
+                val += ".";
         }
         return val;
     }
