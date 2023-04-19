@@ -52,20 +52,27 @@ public class AppTest {
             Scanner sc = new Scanner(file);
             int i = 0;
             int j = 0;
+            String line = "";
             while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                if (line.contains("STOP"))
+                ARP arp = loadARPPackets(i); // First load our packet
+                if (arp != null) // If the packet is null it is not an arp packet
+                    line = sc.nextLine(); // So stay on current line until correct packet found
+                if (line.contains("STOP")) // if STOP, then test is done
                     return;
-                if (line.contains("DONE"))
-                    j = 0;
-                else {
-                    ARP arp = loadARPPackets(i);
-                    switch (j++){
+                if (line.contains("DONE")) { // if DONE, packet is done
+                    j = 0; // reset j
+                    i++; // move to next packet in wireshark
+                } else {
+                    if (arp == null) {
+                        i++;
+                        j = -1; // Skip to end of switch case
+                    }
+                    switch (j++) {
                         case 0:
                             assertEquals(line, String.valueOf(arp.getHardwareType()));
                             break;
                         case 1:
-                            assertEquals(line, arp.getProtocolType()); //Already String
+                            assertEquals(line, arp.getProtocolType()); // Already String
                             break;
                         case 2:
                             assertEquals(line, String.valueOf(arp.getHardwareSize()));
@@ -77,7 +84,7 @@ public class AppTest {
                             assertEquals(line, arp.getSenderMACAddress());
                             break;
                         case 5:
-                            assertEquals(line,arp.getSenderIPAddress());
+                            assertEquals(line, arp.getSenderIPAddress());
                             break;
                         case 6:
                             assertEquals(line, arp.getTargetMACAddress());
@@ -85,8 +92,11 @@ public class AppTest {
                         case 7:
                             assertEquals(line, arp.getTargetIPAddress());
                             break;
+                        default:
+                            j = 0; // If there j is outside bounds we move to next packet
+                            break;
+
                     }
-                    
 
                 }
             }
