@@ -29,41 +29,53 @@ public class DataLinkLayer {
 
     public void print() {
         System.out.println("--- Ethernet ---");
-        System.out.println("Destination: " + getDestination() + "\n"
-                + "Source: " + getSource() + "\n"
-                + "Type: " + getType());
+        System.out.println("   Destination: " + getDestination() + "\n"
+                + "   Source: " + getSource() + "\n"
+                + "   Type: " + getType());
     }
 
     /*
-     * Find the destination address of a given ARP packet
+     * Find the destination address of a given packet
      * The destination bits are located in the first 5 indices of the payload
      * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
      */
     public String getDestination() {
         String destAddress = "";
         for (int i = 0; i <= 5; i++) {
-            destAddress += Integer.toHexString(packet[i] & 0xFF);
-            if (i != 5)
+            String tmp = Integer.toHexString(packet[i] & 0xFF); //Convert byte to hex string
+            if(tmp.length() == 1) tmp = "0" + tmp;              //if the hex value is only one digit pad with 0
+            destAddress += tmp;
+            if (i != 5)     //if last value of loop dont add :
                 destAddress += ":";
         }
         return destAddress;
     }
 
     /*
-     * Find the source address of a given ARP packet
+     * Find the source address of a given packet
      * The source bits are located in the 6th through 11 indice
      * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
      */
     public String getSource() {
         String srcAddress = "";
         for (int i = 6; i <= 11; i++) {
-            srcAddress += Integer.toHexString(packet[i] & 0xFF);
-            if (i != 11)
+            String tmp = Integer.toHexString(packet[i] & 0xFF); //Convert byte to hex string
+            if(tmp.length() == 1) tmp = "0" + tmp;              //if the hex value is only one digit pad with 0
+            srcAddress += tmp;
+            if (i != 11)    //if last value of loop dont add :
                 srcAddress += ":";
         }
         return srcAddress;
     }
 
+    /*
+     * Find the type of the given ARP packet 
+     * The type is found in the 12th and 13th indice
+     * The first value is multiplied by 256 to make room for the next bits 
+     * Moreover, since a hex number is only 4 bits and we have two, we need an 8 bit number.
+     * Thus, multiplying by 256 we expand the 4 bit number to an 8 bit one
+     * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
+     */
     public String getType() {
         int type = (packet[12] & 0xFF) * 256 + (packet[13] & 0xFF);
         switch (type) {
