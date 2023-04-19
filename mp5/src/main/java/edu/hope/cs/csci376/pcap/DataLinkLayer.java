@@ -18,25 +18,48 @@ public class DataLinkLayer {
         this.packet = packet;
         length = packet.length;
 
-
     }
 
     public byte[] getPayload() {
-        byte[] payload = new byte[length-14];
-        for (int b=0; b<length-14; b++) payload[b] = packet[b+14];
+        byte[] payload = new byte[length - 14];
+        for (int b = 0; b < length - 14; b++)
+            payload[b] = packet[b + 14];
         return payload;
     }
 
     public void print() {
         System.out.println("--- Ethernet ---");
         System.out.println(getDestination());
+        System.out.println(getSource());
     }
 
-    public String getDestination(){
-        String destAddress = "";
-        for(int i = 0; i <= 10; i++){
-            System.out.print(Integer.toHexString(packet[i] ) + " ");
+    /*
+     * Find the destination address of a given ARP packet
+     * The destination bits are located in the first 5 indices of the payload
+     * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
+     */
+    public String getDestination() {
+        String destAddress = "Destination: ";
+        for (int i = 0; i <= 5; i++) {
+            destAddress += Integer.toHexString(packet[i] & 0xFF);
+            if (i != 5)
+                destAddress += ":";
         }
         return destAddress;
-    } 
+    }
+
+    /*
+     * Find the source address of a given ARP packet
+     * The source bits are located in the 6th through 11 indice
+     * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
+     */
+    public String getSource() {
+        String srcAddress = "Source: ";
+        for (int i = 6; i <= 11; i++) {
+            srcAddress += Integer.toHexString(packet[i] & 0xFF);
+            if (i != 11)
+                srcAddress += ":";
+        }
+        return srcAddress;
+    }
 }
