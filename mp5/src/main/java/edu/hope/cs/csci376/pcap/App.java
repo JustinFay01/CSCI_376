@@ -28,10 +28,11 @@ public class App {
             System.out.println("\nPacket #" + packetNum);
             System.out.println("   Size: " + pcap.packets().get(packetNum).origLen());
             DataLinkLayer link = new DataLinkLayer(pcap.packets().get(packetNum)._raw_body());
-            link.print();
             if (link.type == DataLinkLayer.TYPE_ARP) {
                 ARP arp = new ARP(link.getPayload());
                 arp.print();
+            } else {
+                link.print();
             }
             if (link.type == DataLinkLayer.TYPE_IPv4) {
                 NetworkLayer network = new NetworkLayer(link.getPayload());

@@ -46,10 +46,6 @@ public class ARP {
                 + "   Sender IP  address: " + senderIPAddress + "\n"
                 + "   Target MAC address: " + targetMACAddress + "\n"
                 + "   Target IP address: " + targetIPAddress + "\n");
-
-        for (int i = 14; i <= 17; i++) {
-            System.out.print(Byte.toUnsignedInt(packet[i]) + " ");
-        }
     }
 
     /*
@@ -99,6 +95,53 @@ public class ARP {
                 val += ".";
         }
         return val;
+    }
+
+    /*
+     * Getters for each field added for tests
+     */
+    public int getHardwareType() {
+        return hardwareType;
+    }
+
+    public int getHardwareSize() {
+        return hardwareSize;
+    }
+
+    public String getProtocolType() {
+        return protocolType;
+    }
+
+    public int getProtocolSize() {
+        return protocolSize;
+    }
+
+    public int getMACAddrLength() {
+        return MACAddrLength;
+    }
+
+    public int getIPAddrLength() {
+        return IPAddrLength;
+    }
+
+    public int getOperation() {
+        return operation;
+    }
+
+    public String getSenderMACAddress() {
+        return senderMACAddress;
+    }
+
+    public String getSenderIPAddress() {
+        return senderIPAddress;
+    }
+
+    public String getTargetMACAddress() {
+        return targetMACAddress;
+    }
+
+    public String getTargetIPAddress() {
+        return targetIPAddress;
     }
 
 }
