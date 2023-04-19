@@ -1,6 +1,6 @@
 package edu.hope.cs.csci376.pcap;
 
-public class ARP {
+public class ARP extends DataLinkLayer{
 
     int hardwareType = 0;
     int protocolType = 0;
@@ -13,7 +13,7 @@ public class ARP {
     byte[] targetIPAddress;
     
     public ARP(byte[] packet) {
-
+        super(packet);
         hardwareType = (packet[0]&0xFF)*256 + (packet[1]&0xFF); 
     }
 

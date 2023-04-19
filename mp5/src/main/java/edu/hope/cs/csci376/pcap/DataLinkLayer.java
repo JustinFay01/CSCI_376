@@ -9,7 +9,7 @@ public class DataLinkLayer {
     public static final short TYPE_LLDP = (short) 0x88cc;
     public static final short TYPE_BSN = (short) 0x8942;
 
-    short type = (short) 0x0;
+    int type = 0x0;
     int length = 0;
     byte[] packet;
 
@@ -17,7 +17,7 @@ public class DataLinkLayer {
 
         this.packet = packet;
         length = packet.length;
-
+        type = (packet[12] & 0xFF) * 256 + (packet[13] & 0xFF);
     }
 
     public byte[] getPayload() {
@@ -77,7 +77,6 @@ public class DataLinkLayer {
      * It is & with 0xFF to gain the first hex values (Changes ffffff --> ff)
      */
     public String getType() {
-        int type = (packet[12] & 0xFF) * 256 + (packet[13] & 0xFF);
         switch (type) {
             case TYPE_ARP:
                 return "0x0806";
