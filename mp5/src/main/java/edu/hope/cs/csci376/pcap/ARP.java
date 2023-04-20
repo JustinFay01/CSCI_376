@@ -66,7 +66,7 @@ public class ARP {
 
     /*
      * Serves as a helper function to take n length section of the byte array
-     * and to convert it into the correct format hex value as and in turn the correct
+     * and to convert it into the correct format hex value and in turn the correct
      * format mac address.
      */
     public String macConvert(int start, int end) {
