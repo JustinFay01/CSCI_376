@@ -1,3 +1,7 @@
+# C Stuff
+*.exe
+.vscode/
+
 teststuff/
 # Compiled class file
 *.class
