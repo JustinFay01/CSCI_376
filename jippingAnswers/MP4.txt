@@ -1,0 +1,61 @@
+//-----------------------------------------------------------
+//
+//  Machine Problem 4: Non-recursive DNS queries
+//
+//  Mike Jipping, March 2023
+
+package edu.hope.cs.csci376;
+
+import java.net.DatagramSocket;
+import java.util.Scanner;
+
+/**
+ * This is the driver.  This code will continue to send DNS queries
+ * until the return serverName is null -- meaning there are no more
+ * servers to ask.  Hopefully, that can mean an address as an answer,
+ * but it can mean a CNAME answer as well.
+ */
+public class App {
+    public static void main( String[] args )
+    {
+        // Start with a root server
+        String serverName = "a.root-servers.net"; 
+
+        // Get the domain name from the user.
+        Scanner in = new Scanner(System.in); 
+        System.out.print( "Enter a domain name: " );
+        String name = in.nextLine();
+        in.close();
+        
+        // And now loop until we have a null "rServerName"
+        Boolean moreServers = true;
+        DNSQuery query = null;
+        DNSResponse response = null;
+        while (moreServers) {
+            // Send the query to the "serverName"
+            query = new DNSQuery(serverName, name);
+            DatagramSocket dgs = query.sendQuery(false);
+
+            // And obtain and process the response.
+            response = new DNSResponse(dgs);
+            response.receive();
+            response.processResponse();
+
+            // Get the names and report them.
+            String rNodeName = response.responseName();
+            String rServerName = response.responseServerName();
+            if (rServerName == null) {
+                String rAddress = response.responseAddress();
+                System.out.printf("Found %s, address is %s\n", rNodeName, rAddress);
+            } else {
+                System.out.printf("Found %s, served by %s\n", rNodeName, rServerName);
+            }
+
+            // Determines if we are done or not.
+            moreServers = (rServerName != null);
+            if (moreServers) {
+                serverName = rServerName;
+            }
+        }
+    }
+}
