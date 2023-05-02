@@ -5,6 +5,8 @@ public class IPAddress {
     private String address;
     private String subnet;
 
+    private String subnetBin;
+
     private int[] addressArray;
     private int[] subnetArray;
     private int[] ipStartRange;
@@ -24,18 +26,41 @@ public class IPAddress {
     public void printInfo() {
         System.out.println("Ip address is: " + Arrays.toString(addressArray) + "\n"
                 + "Subnet address is: " + Arrays.toString(subnetArray) + "\n"
-                + "First IP address is: " + Arrays.toString(ipStartRange) + "\n"
+                + "First IP address (Network ID) is : " + Arrays.toString(ipStartRange) + "\n"
                 + "Last IP address is: " + Arrays.toString(ipEndRange) + "\n"
-                + "Total number of usable IP's (with broad cast): " + totalIpAddresses());
+                + "Total number of usable IP's (with broad cast): " + totalIpAddresses() + "\n"
+                + "Subnet in binary is: " + subnetBin);
     }
 
-    public int totalIpAddresses(){
+    /**
+     * Total ip addresses can be found using the sub net mask.
+     * However many zeros there are in the 32 bit sub net mask there are 2^n (n =
+     * number of zeros) possible IP addresses including 2 broad cast ip's
+     * 
+     * @return total number of usable ip address with broad cast
+     */
+    public int totalIpAddresses() {
         int total = 0;
-        for(int i = 0; i < ipStartRange.length; i++){
-            total += Math.abs(ipEndRange[i] - ipStartRange[i]);
+        String subnetBinary = "";
+        for (int i = 0; i < subnetArray.length; i++) {
+            String tmp = Integer.toBinaryString(subnetArray[i]);
+            if (tmp.length() < 8) {
+                String z = "";
+                for (int j = 0; j <= 8 - tmp.length(); j++) {
+                    z += "0";
+                }
+                tmp = z + tmp;
+            }
+            subnetBinary += tmp;
         }
 
-        return total;
+        for (int i = 0; i < subnetBinary.length(); i++) {
+            if (subnetBinary.charAt(i) == '0') {
+                total++;
+            }
+        }
+        subnetBin = subnetBinary;
+        return (int) Math.pow(2, --total);
     }
 
     /**
